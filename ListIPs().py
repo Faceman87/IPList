@@ -1,22 +1,19 @@
 #geoIP database creator
 #Created by: Christopher Gaines
 #Created on: 10/16/2013
-#Modified on: 10/28/2013
+#Modified on: 05/09/2014
 
 import sqlite3, os, re, time, sys, logging, datetime, fileinput, subprocess
 
-#SEE BOTTOM for INITIALIZERS
-		
 
 #=====================================================================================================================	
 #    	LIST ALL IP FUNCTION
 #=====================================================================================================================			
-def listIPs():
+def listIPs(testRange):
 	maxBit = 255
 	validIP = True
 	count = 0
-	#testRange = "254.254.253.254-254.254.255.10"
-	testRange = "71.54.36.253-71.54.37.7"
+	
 	#Separate the IPs
 	splitIP = testRange.split("-")
 
@@ -40,8 +37,8 @@ def listIPs():
 		validIP = False
 	
 	#Start timer	
-	start = datetime.datetime.now()
-	startTime = start.strftime("%H:%M:%S")
+	#start = datetime.datetime.now()
+	#startTime = start.strftime("%H:%M:%S")
 	
 	#Start listing IPs
 	if (validIP == True):
@@ -50,7 +47,9 @@ def listIPs():
 
 			#loop through 0-254 bits on last bit sequence
 			while(splitIPstart[i] < splitIPend[i] and splitIPstart[i] < maxBit and splitIPstart[0] < maxBit and splitIPstart[1] < maxBit and splitIPstart[2] < maxBit and splitIPstart[3] < maxBit):
-				print(splitIPstart[0],'.',splitIPstart[1],'.',splitIPstart[2],'.',splitIPstart[3], sep='')
+				writeResults = str(splitIPstart[0]) + '.' + str(splitIPstart[1]) + '.' + str(splitIPstart[2]) + '.' + str(splitIPstart[3]) + '\n'
+				results.write(writeResults)
+				print(writeResults)
 				count = count + 1	
 				
 				if(splitIPstart[0] < maxBit-1 and splitIPstart[1] == maxBit-1 and splitIPstart[2] == maxBit-1 and splitIPstart[3] == maxBit-1 and i == 0):
@@ -58,20 +57,26 @@ def listIPs():
 					splitIPstart[1] = 0
 					splitIPstart[2] = 0
 					splitIPstart[3] = 0
-					print(splitIPstart[0],'.',splitIPstart[1],'.',splitIPstart[2],'.',splitIPstart[3], sep='')
+					writeResults = str(splitIPstart[0]) + '.' + str(splitIPstart[1]) + '.' + str(splitIPstart[2]) + '.' + str(splitIPstart[3]) + '\n'
+					results.write(writeResults)
+					print(writeResults)
 					count = count + 1
 						
 				elif(splitIPstart[1] < maxBit -1 and splitIPstart[2] == maxBit-1 and splitIPstart[3] == maxBit-1 and i <= 1):
 					splitIPstart[1] = splitIPstart[1] + 1
 					splitIPstart[2] = 0
 					splitIPstart[3] = 0
-					print(splitIPstart[0],'.',splitIPstart[1],'.',splitIPstart[2],'.',splitIPstart[3], sep='')
+					writeResults = str(splitIPstart[0]) + '.' + str(splitIPstart[1]) + '.' + str(splitIPstart[2]) + '.' + str(splitIPstart[3]) + '\n'
+					results.write(writeResults)
+					print(writeResults)
 					count = count + 1
 					
 				elif(splitIPstart[2] < maxBit-1 and splitIPstart[3] == maxBit-1 and i <= 2):
 					splitIPstart[2] =  splitIPstart[2] + 1
 					splitIPstart[3] = 0
-					print(splitIPstart[0],'.',splitIPstart[1],'.',splitIPstart[2],'.',splitIPstart[3], sep='')
+					writeResults = str(splitIPstart[0]) + '.' + str(splitIPstart[1]) + '.' + str(splitIPstart[2]) + '.' + str(splitIPstart[3]) + '\n'
+					results.write(writeResults)
+					print(writeResults)
 					count = count + 1
 				
 				splitIPstart[3] = splitIPstart[3] + 1 
@@ -80,7 +85,9 @@ def listIPs():
 	
 		#Print and Count End IP If it's a proper IP
 		if (splitIPend[0] != maxBit and splitIPend[1] != maxBit and splitIPend[2] != maxBit and splitIPend[3] != maxBit):
-			print(splitIPend[0],'.', splitIPend[1],'.', splitIPend[2],'.', splitIPend[3], sep='')
+			writeResults = str(splitIPend[0]) + '.' + str(splitIPend[1]) + '.' + str(splitIPend[2]) + '.' + str(splitIPend[3]) + '\n'
+			results.write(writeResults)
+			print(writeResults)
 			count = count + 1
 		else:
 			print("Invalid End IP, 255 is reserved for Network, showing last valid IP")
@@ -88,15 +95,25 @@ def listIPs():
 	#endif
 	
 	#Stop timer
-	end = datetime.datetime.now()	
-	endTime = end.strftime("%H:%M:%S")
+	#end = datetime.datetime.now()	
+	#endTime = end.strftime("%H:%M:%S")
 	
-	print("Start: ", startTime)
-	print("End  : ", endTime)
-	print("Count: ", count)
+	#print("Start: ", startTime)
+	#print("End  : ", endTime)
+	#print("Count: ", count)
 
 #=====================================================================================================================	
 #    	START HERE
-#=====================================================================================================================	
+#=====================================================================================================================
 
-ListIPs()
+listFile = open("C:\\Users\\84152\\Documents\\ipSplitter\\SplitIP\\list.txt", 'r+')
+results = open("C:\\Users\\84152\\Documents\\ipSplitter\\SplitIP\\results.txt", 'w')
+for line in listFile:
+	if re.search("-",line):
+		testRange = line
+		listIPs(testRange)
+	else:
+		print(line)
+		results.write(line)
+	#ENDIF
+#ENDFOR
