@@ -3,6 +3,8 @@
 #Created on: 10/16/2013
 #Modified on: 05/09/2014
 
+#There are start and end time loggers within the listIPs function. Just uncomment if you want to use them
+
 import sqlite3, os, re, time, sys, logging, datetime, fileinput, subprocess
 
 
@@ -106,8 +108,8 @@ def listIPs(testRange):
 #    	START HERE
 #=====================================================================================================================
 
-listFile = open("C:\\Users\\84152\\Documents\\ipSplitter\\SplitIP\\list.txt", 'r+')
-results = open("C:\\Users\\84152\\Documents\\ipSplitter\\SplitIP\\results.txt", 'w')
+listFile = open("READFFROM FILE LIST PATH\\list.txt", 'r+')
+results = open("WRITE RESULTS TO FILE PATH\\results.txt", 'w')
 for line in listFile:
 	if re.search("-",line):
 		testRange = line
